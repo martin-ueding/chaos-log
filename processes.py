@@ -17,10 +17,9 @@ class Process(object):
 
     def add_pstate(self, pstate):
         self.pstates.append(pstate)
-
-		
-	def __repr__(self):
-		return pid, command, pstates
+        
+    def __repr__(self):
+        return str(self.pid)+" "+str(self.command)+" "+str(self.pstates)
 
 class Computer(object):
     def __init__(self):
@@ -28,8 +27,8 @@ class Computer(object):
         self.tstates = []
         self.processes = []
 
-	def __repr__(self):
-		return str(processes)
+    def __repr__(self):
+        return str(self.processes)
 
 class PState(object):
     def __init__(self, time, cpu, mem, status):
@@ -38,8 +37,18 @@ class PState(object):
         self.mem = mem
         self.status = status
 
-	def __repr__(self):
-		return time, cpu, mem, status
+    def __repr__(self):
+        return str(self.time)+" "+str(self.cpu)+" "+str(self.mem)+" "+str(self.status)
+        
+class CState(object):
+    def __init__(self, time, cpu, mem, swap):
+        self.time = time
+        self.cpu = cpu
+        self.mem = mem
+        self.swap = swap
+
+    def __repr__(self):
+        return str(self.time)+" "+str(self.cpu)+" "+str(self.mem)+" "+str(self.swap)
 
 class TState(object):
     def __init__(self, cpu, mb):
@@ -59,8 +68,6 @@ def main():
 
     for infolder in args:
         os.path.walk(infolder, parsefolder, None)
-
-    print str(computer)
 
 def parsefolder(arg, dirname, names):
     names.sort()
@@ -88,11 +95,12 @@ def parseprocesses(dirname, name):
     )
 
     with open(dirname+"/"+name) as f:
-        for lineno, line in zip(itertools.count(), f):
-            if (lineno < 7):
-                continue
+        f.readline()
+        f.readline()
+        cpu = 100.0 - float(f.readline().split()[4][:-4])
 
-            else:
+
+        for lineno, line in zip(itertools.count(), f):
                 data = line.split()
 
                 if len(data) < 12:
@@ -106,7 +114,7 @@ def parseprocesses(dirname, name):
                 current = None
                 for process in computer.processes:
                     if process.pid == pid and process.command == command:
-                        corrent = process
+                        current = process
                         break
 
                 if current is None:
@@ -120,4 +128,4 @@ def parseprocesses(dirname, name):
 
 
 if __name__ == "__main__":
-	main()
+    main()
