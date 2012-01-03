@@ -42,6 +42,12 @@ class Computer(object):
         
     def avgtemp(self):
         return avg([x.cpu for x in self.tstates]), avg([x.mb for x in self.tstates])
+        
+    def cpustats(self):
+        return {"cpu":  {"min": min([x.cpu for x in self.cstates]), "max": max([x.cpu for x in self.cstates]), "avg": avg([x.cpu for x in self.cstates])},
+	        "mem":  {"min": min([x.mem for x in self.cstates]), "max": max([x.mem for x in self.cstates]), "avg": avg([x.mem for x in self.cstates])},
+	        "swap": {"min": min([x.swap for x in self.cstates]), "max": max([x.swap for x in self.cstates]), "avg": avg([x.swap for x in self.cstates])}
+	  }
 
 class PState(object):
     def __init__(self, time, cpu, mem, status):
@@ -97,11 +103,18 @@ def main():
     #print repr(computer)
     
     if options.max:
+	cpustats = computer.cpustats()
+	
+        print "CPU Usage  Min: %6.1f %%, Max: %6.1f %%, Avg: %6.1f %%" % (cpustats["cpu"]["min"], cpustats["cpu"]["max"], cpustats["cpu"]["avg"])
+        print "Memory     Min: %6.1f M, Max: %6.1f M, Avg: %6.1f M" % (cpustats["mem"]["min"], cpustats["mem"]["max"], cpustats["mem"]["avg"])
+        print "Swap       Min: %6.1f M, Max: %6.1f M, Avg: %6.1f M" % (cpustats["swap"]["min"], cpustats["swap"]["max"], cpustats["swap"]["avg"])
+        print
+      
 	mintemp = computer.mintemp()
 	maxtemp = computer.maxtemp()
 	avgtemp = computer.avgtemp()
-        print "CPU        Min: %3.1f, Max: %3.1f, Avg: %3.1f" % (mintemp[0], maxtemp[0], avgtemp[0])
-        print "Mainboard  Min: %3.1f, Max: %3.1f, Avg: %3.1f" % (mintemp[1], maxtemp[1], avgtemp[1])
+        print "CPU        Min: %3.1f °C,  Max: %3.1f °C,  Avg: %3.1f °C" % (mintemp[0], maxtemp[0], avgtemp[0])
+        print "Mainboard  Min: %3.1f °C,  Max: %3.1f °C,  Avg: %3.1f °C" % (mintemp[1], maxtemp[1], avgtemp[1])
 
 def parsefolder(arg, dirname, names):
     names.sort()
@@ -112,8 +125,8 @@ def parsefolder(arg, dirname, names):
             continue
 
         parsefile(dirname, name)
-
-def parsefile(dirname, name):
+        
+def gettime(dirname, name):
     timefolder = os.path.basename(dirname)
     datefolder = os.path.basename(os.path.dirname(dirname))
     
@@ -124,23 +137,24 @@ def parsefile(dirname, name):
 	int(timefolder[:2]),
 	int(name[:2])
      )
-        
+
+def parsefile(dirname, name):
     if name.endswith("processes.log"):
 	if options.files:
 	    print "Parsing", dirname+"/"+name
-        parseprocesses(dirname, name, time)
+        parseprocesses(dirname, name, gettime(dirname, name))
     elif name.endswith("sensors.log"):   
 	if options.files:
 	    print "Parsing", dirname+"/"+name
-        parsetemp(dirname, name, time)
+        parsetemp(dirname, name, gettime(dirname, name))
 
 def parseprocesses(dirname, name, time):
     with open(dirname+"/"+name) as f:
         f.readline()
         f.readline()
         cpu = 100.0 - float(f.readline().split()[4][:-4])
-        mem = float(f.readline().split()[3][:-1])
-        swap = float(f.readline().split()[3][:-1])
+        mem = float(f.readline().split()[3][:-1]) / 1024
+        swap = float(f.readline().split()[3][:-1]) / 1024
         
         f.readline()
         f.readline()
@@ -158,7 +172,7 @@ def parseprocesses(dirname, name, time):
                 pid = int(data[0])
                 command = data[11]
 
-                state = PState(time, float(data[8]), float(data[9]), data[7])
+                state = PState(time, float(data[8]), float(data[9]) / 1024, data[7])
 
                 key = (pid, command)
                 
