@@ -97,8 +97,8 @@ def main():
     #print repr(computer)
     
     if options.max:
-	maxtemp = computer.mintemp()
-	mintemp = computer.maxtemp()
+	mintemp = computer.mintemp()
+	maxtemp = computer.maxtemp()
 	avgtemp = computer.avgtemp()
         print "CPU        Min: %3.1f, Max: %3.1f, Avg: %3.1f" % (mintemp[0], maxtemp[0], avgtemp[0])
         print "Mainboard  Min: %3.1f, Max: %3.1f, Avg: %3.1f" % (mintemp[1], maxtemp[1], avgtemp[1])
