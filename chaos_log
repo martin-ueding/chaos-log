@@ -51,12 +51,13 @@ class CState(object):
         return "CState(%s, %s, %s, %s)" % (repr(self.time), repr(self.cpu), repr(self.mem), repr(self.swap))
 
 class TState(object):
-    def __init__(self, cpu, mb):
+    def __init__(self, time, cpu, mb):
+        self.time = time
         self.cpu = cpu
         self.mb = mb
 
     def __repr__(self):
-        return "TState(%s, %s)" % (repr(self.cpu), repr(self.mb))
+        return "TState(%s, %s, %s)" % (repr(self.time), repr(self.cpu), repr(self.mb))
 
 
 def main():
@@ -72,7 +73,7 @@ def main():
     for infolder in args:
         os.path.walk(infolder, parsefolder, None)
         
-    print repr(computer)
+    #print repr(computer)
 
 def parsefolder(arg, dirname, names):
     names.sort()
@@ -84,21 +85,25 @@ def parsefolder(arg, dirname, names):
         parsefile(dirname, name)
 
 def parsefile(dirname, name):
+    timefolder = os.path.basename(dirname)
+    datefolder = os.path.basename(os.path.dirname(dirname))
+    
+    time = datetime.datetime(
+    int(datefolder[0:4]),
+    int(datefolder[5:7]),
+    int(datefolder[8:10]),
+    int(timefolder[:2]),
+    int(name[:2])
+    )
+        
     if name.endswith("processes.log"):
         print "Parsing", dirname+"/"+name
-        timefolder = os.path.basename(dirname)
-        datefolder = os.path.basename(os.path.dirname(dirname))
-        
-        time = datetime.datetime(
-            int(datefolder[0:4]),
-            int(datefolder[5:7]),
-            int(datefolder[8:10]),
-            int(timefolder[:2])
-        )
         parseprocesses(dirname, name, time)
+    elif name.endswith("sensors.log"):
+        print "Parsing", dirname+"/"+name
+        parsetemp(dirname, name, time)
 
 def parseprocesses(dirname, name, time):
-
     with open(dirname+"/"+name) as f:
         f.readline()
         f.readline()
@@ -133,7 +138,18 @@ def parseprocesses(dirname, name, time):
 
                 current.pstates.append(state)
 
-
+def parsetemp(dirname, name, time):
+    with open(dirname+"/"+name) as f:
+      lines = f.read().split("\n")
+      
+      if len(lines) < 11:
+	return
+      
+      cpu = float(lines[9].split()[2])
+      mb = float(lines[10].split()[2])
+      
+      state = TState(time, cpu, mb)
+      computer.tstates.append(state)
 
 
 
