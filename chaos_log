@@ -26,7 +26,7 @@ class Process(object):
         return "Process(%s, %s, %s)" % (repr(self.pid), repr(self.command), repr(self.pstates))
 
 class Computer(object):
-    def __init__(self, cstates=[], tstates=[], processes=[]):
+    def __init__(self, cstates=[], tstates=[], processes={}):
         self.cstates = cstates
         self.tstates = tstates
         self.processes = processes
@@ -117,12 +117,12 @@ def parsefile(dirname, name):
     datefolder = os.path.basename(os.path.dirname(dirname))
     
     time = datetime.datetime(
-    int(datefolder[0:4]),
-    int(datefolder[5:7]),
-    int(datefolder[8:10]),
-    int(timefolder[:2]),
-    int(name[:2])
-    )
+	int(datefolder[0:4]),
+	int(datefolder[5:7]),
+	int(datefolder[8:10]),
+	int(timefolder[:2]),
+	int(name[:2])
+     )
         
     if name.endswith("processes.log"):
 	if options.verbose:
@@ -141,6 +141,9 @@ def parseprocesses(dirname, name, time):
         mem = float(f.readline().split()[3][:-1])
         swap = float(f.readline().split()[3][:-1])
         
+        f.readline()
+        f.readline()
+        
         cstate = CState(time, cpu, mem, swap)
         
         computer.cstates.append(cstate)
@@ -151,20 +154,18 @@ def parseprocesses(dirname, name, time):
                 if len(data) < 12:
                     continue
 
-                pid = data[0]
+                pid = int(data[0])
                 command = data[11]
 
-                state = PState(time, data[8], data[9], data[7])
+                state = PState(time, float(data[8]), float(data[9]), data[7])
 
-                current = None
-                for process in computer.processes:
-                    if process.pid == pid and process.command == command:
-                        current = process
-                        break
-
-                if current is None:
+                key = (pid, command)
+                
+                if key in computer.processes:
+		    current = computer.processes[key]
+		else:
                     current = Process(pid, command)
-                    computer.processes.append(current)
+		    computer.processes[(pid, command)] = current
 
                 current.pstates.append(state)
 
