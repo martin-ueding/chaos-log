@@ -3,8 +3,9 @@
 
 # Copyright (c) 2012 Martin Ueding <dev@martin-ueding.de>
 
-import optparse
+import datetime
 import itertools
+import optparse
 import os
 
 
@@ -49,6 +50,8 @@ def main():
     for infolder in args:
         os.path.walk(infolder, parsefolder, None)
 
+    print computer
+
 def parsefolder(arg, dirname, names):
     names.sort()
     print "Parsing", dirname
@@ -64,6 +67,16 @@ def parsefile(dirname, name):
         parseprocesses(dirname, name)
 
 def parseprocesses(dirname, name):
+    timefolder = os.path.basename(dirname)
+    datefolder = os.path.basename(os.path.dirname(dirname))
+
+    time = datetime.datetime(
+        int(datefolder[0:4]),
+        int(datefolder[5:7]),
+        int(datefolder[8:10]),
+        int(timefolder[:2])
+    )
+
     with open(dirname+"/"+name) as f:
         for lineno, line in zip(itertools.count(), f):
             if (lineno < 7):
@@ -72,8 +85,28 @@ def parseprocesses(dirname, name):
             else:
                 data = line.split()
 
+                if len(data) < 12:
+                    continue
+
+                pid = data[0]
+                command = data[11]
+
+                state = PState(time, data[8], data[9], data[7])
+
+                current = None
                 for process in computer.processes:
-                    pass
+                    if process.pid == pid and process.command == command:
+                        corrent = process
+                        break
+
+                if current is None:
+                    current = Process(pid, command)
+                    computer.processes.append(current)
+
+                current.pstates.append(state)
+
+
+
 
 
 if __name__ == "__main__":
