@@ -7,6 +7,10 @@ import datetime
 import itertools
 import optparse
 import os
+import sys
+
+def avg(l):
+    return sum(l) / len(l)
 
 
 class Process(object):
@@ -29,6 +33,15 @@ class Computer(object):
 
     def __repr__(self):
         return "Computer(%s, %s, %s)" % (repr(self.cstates), repr(self.tstates), repr(self.processes))
+        
+    def mintemp(self):
+        return min([x.cpu for x in self.tstates]), min([x.mb for x in self.tstates])
+        
+    def maxtemp(self):
+        return max([x.cpu for x in self.tstates]), max([x.mb for x in self.tstates])
+        
+    def avgtemp(self):
+        return avg([x.cpu for x in self.tstates]), avg([x.mb for x in self.tstates])
 
 class PState(object):
     def __init__(self, time, cpu, mem, status):
@@ -62,22 +75,37 @@ class TState(object):
 
 def main():
     parser = optparse.OptionParser()
-    #parser.add_option("", dest="", type="", default=, help=)
+    parser.add_option("--max", dest="max", action="store_true", default=False, help="Show min-max status")
+    parser.add_option("-v", dest="verbose", action="store_true", default=False, help="Show steps")
 
+    global options
     (options, args) = parser.parse_args()
     del parser
+    
 
     global computer
     computer = Computer()
+    
+    if len(args) < 1:
+        print "I need some input."
+        sys.exit(1)
 
     for infolder in args:
         os.path.walk(infolder, parsefolder, None)
         
     #print repr(computer)
+    
+    if options.max:
+	maxtemp = computer.mintemp()
+	mintemp = computer.maxtemp()
+	avgtemp = computer.avgtemp()
+        print "CPU        Min: %3.1f, Max: %3.1f, Avg: %3.1f" % (mintemp[0], maxtemp[0], avgtemp[0])
+        print "Mainboard  Min: %3.1f, Max: %3.1f, Avg: %3.1f" % (mintemp[1], maxtemp[1], avgtemp[1])
 
 def parsefolder(arg, dirname, names):
     names.sort()
-    print "Parsing", dirname
+    if options.verbose:
+        print "Parsing", dirname
     for name in names:
         if not os.path.isfile(dirname+"/"+name):
             continue
@@ -97,10 +125,12 @@ def parsefile(dirname, name):
     )
         
     if name.endswith("processes.log"):
-        print "Parsing", dirname+"/"+name
+	if options.verbose:
+	    print "Parsing", dirname+"/"+name
         parseprocesses(dirname, name, time)
-    elif name.endswith("sensors.log"):
-        print "Parsing", dirname+"/"+name
+    elif name.endswith("sensors.log"):   
+	if options.verbose:
+	    print "Parsing", dirname+"/"+name
         parsetemp(dirname, name, time)
 
 def parseprocesses(dirname, name, time):
