@@ -77,6 +77,7 @@ def main():
     parser = optparse.OptionParser()
     parser.add_option("--max", dest="max", action="store_true", default=False, help="Show min-max status")
     parser.add_option("-v", dest="verbose", action="store_true", default=False, help="Show steps")
+    parser.add_option("--files", dest="files", action="store_true", default=False, help="Show each processed file")
 
     global options
     (options, args) = parser.parse_args()
@@ -125,11 +126,11 @@ def parsefile(dirname, name):
      )
         
     if name.endswith("processes.log"):
-	if options.verbose:
+	if options.files:
 	    print "Parsing", dirname+"/"+name
         parseprocesses(dirname, name, time)
     elif name.endswith("sensors.log"):   
-	if options.verbose:
+	if options.files:
 	    print "Parsing", dirname+"/"+name
         parsetemp(dirname, name, time)
 
