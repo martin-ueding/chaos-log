@@ -18,11 +18,18 @@ class Process(object):
     def add_pstate(self, pstate):
         self.pstates.append(pstate)
 
+		
+	def __repr__(self):
+		return pid, command, pstates
+
 class Computer(object):
     def __init__(self):
         self.pstates = []
         self.tstates = []
         self.processes = []
+
+	def __repr__(self):
+		return processes
 
 class PState(object):
     def __init__(self, time, cpu, mem, status):
@@ -30,6 +37,9 @@ class PState(object):
         self.cpu = cpu
         self.mem = mem
         self.status = status
+
+	def __repr__(self):
+		return time, cpu, mem, status
 
 class TState(object):
     def __init__(self, cpu, mb):
