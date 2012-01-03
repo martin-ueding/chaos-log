@@ -29,7 +29,7 @@ class Computer(object):
         self.processes = []
 
 	def __repr__(self):
-		return processes
+		return str(processes)
 
 class PState(object):
     def __init__(self, time, cpu, mem, status):
@@ -60,7 +60,7 @@ def main():
     for infolder in args:
         os.path.walk(infolder, parsefolder, None)
 
-    print computer
+    print str(computer)
 
 def parsefolder(arg, dirname, names):
     names.sort()
