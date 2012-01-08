@@ -6,11 +6,14 @@ pythonfiles:=$(wildcard *.py)
 #                               Public Targets                                #
 ###############################################################################
 
+# Generates documentation from the Python source code.
 epydoc: html/index.html
 
+# Runs a test.
 test:
 	bash testrun.sh
 
+# The usual stuff, cleans all build files or files that can be easily created.
 clean:
 	$(RM) *.pyc
 	$(RM) -r html
