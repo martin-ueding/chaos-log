@@ -3,7 +3,7 @@
 
 # Copyright (c) 2012 Martin Ueding <dev@martin-ueding.de>
 
-__doctype__ = "javadoc en"
+__docformat__ = "javadoc en"
 
 
 import datetime

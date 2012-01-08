@@ -6,4 +6,4 @@ test:
 	bash testrun.sh
 
 html/index.html: chaos_log $(pythonfiles)
-	epydoc $^
+	epydoc -v $^

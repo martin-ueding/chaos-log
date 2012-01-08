@@ -7,7 +7,7 @@
 Models a computer with temperature states and multiple processes.
 """
 
-__doctype__ = "javadoc en"
+__docformat__ = "javadoc en"
 
 
 class Process(object):
