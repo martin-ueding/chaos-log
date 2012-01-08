@@ -63,26 +63,11 @@ def main():
     
     # Maximum Report.
     if options.max:
-        cpustats = computer.cpustats()
-        
-        print "CPU Load   Min: %6.1f,   Max: %6.1f,   Avg: %6.1f " % (cpustats["cpu"]["min"], cpustats["cpu"]["max"], cpustats["cpu"]["avg"])
-        print "Memory     Min: %6.1f M, Max: %6.1f M, Avg: %6.1f M" % (cpustats["mem"]["min"], cpustats["mem"]["max"], cpustats["mem"]["avg"])
-        print "Swap       Min: %6.1f M, Max: %6.1f M, Avg: %6.1f M" % (cpustats["swap"]["min"], cpustats["swap"]["max"], cpustats["swap"]["avg"])
-        print
-      
-        mintemp = computer.mintemp()
-        maxtemp = computer.maxtemp()
-        avgtemp = computer.avgtemp()
-        print "CPU        Min: %3.1f °C,  Max: %3.1f °C,  Avg: %3.1f °C" % (mintemp[0], maxtemp[0], avgtemp[0])
-        print "Mainboard  Min: %3.1f °C,  Max: %3.1f °C,  Avg: %3.1f °C" % (mintemp[1], maxtemp[1], avgtemp[1])
+        reports.maximum(computer)
         
     # Computer Overview Report.
-    if options.computer:        
-        writer = csv.writer(outfile, quoting=csv.QUOTE_ALL)
-        writer.writerow(["Timestamp", "Load Average", "Memory MB", "Swap MB", "Temp CPU °C", "Temp Mainboard °C"])
-        for cpu, temp in zip(computer.cstates, computer.tstates):
-            data = [time.mktime(cpu.time.timetuple()), cpu.cpu, cpu.mem, cpu.swap, temp.cpu, temp.mb]
-            writer.writerow(data)
+    if options.computer:
+        reports.computer_overview(outfile, computer)
             
     # Single Process Report.
     if options.process is not None:
@@ -91,6 +76,7 @@ def main():
     # Complete Dump.
     if options.dump:
         reports.dump(outfile, computer)
+
         
     # If an outfile was used, close it.
     if options.outfile != "-":
