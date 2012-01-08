@@ -43,9 +43,6 @@ def gettime(dirname, name):
 def parsefile(dirname, name, options, computer):
     """
     Determines which type of file is given and calls the apropriate parse method.
-
-    Side effects:
-        - options
     """
     if name.endswith("processes.log"):
         if options.files:
@@ -60,9 +57,6 @@ def parsefile(dirname, name, options, computer):
 def parsetemp(dirname, name, time, computer):
     """
     Parse a temperature file.
-
-    Side effects:
-        - computer
     """
     with open(dirname+"/"+name) as f:
       lines = f.read().split("\n")
@@ -80,9 +74,6 @@ def parsetemp(dirname, name, time, computer):
 def parseprocesses(dirname, name, time, computer):
     """
     Parse a process file.
-
-    Side effects:
-        - computer
     """
     with open(dirname+"/"+name) as f:
         cpu = float(f.readline().split()[12][:-1])
