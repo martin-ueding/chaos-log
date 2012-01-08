@@ -15,6 +15,10 @@ import libcomputer
 def parsefolder(arg, dirname, names):
     """
     Parses a folder. All files are passed to the parsefile function.
+
+    @param arg Tuble containing program options and the computer.
+    @param dirname Directory to be processes.
+    @param name List of files in this directory.
     """
     options, computer = arg
 
@@ -25,12 +29,15 @@ def parsefolder(arg, dirname, names):
         if not os.path.isfile(dirname+"/"+name):
             continue
 
-        parsefile(dirname, name, options, computer)
+        parsefile(dirname, name, options.files, computer)
         
 
 def gettime(dirname, name):
     """
     Parses a time from the folder name.
+
+    @param dirname Directory to be processes.
+    @param name List of files in this directory.
     """
     timefolder = os.path.basename(dirname)
     datefolder = os.path.basename(os.path.dirname(dirname))
@@ -40,16 +47,21 @@ def gettime(dirname, name):
     return time
 
 
-def parsefile(dirname, name, options, computer):
+def parsefile(dirname, name, show_files, computer):
     """
     Determines which type of file is given and calls the apropriate parse method.
+
+    @param dirname Directory to be processes.
+    @param name List of files in this directory.
+    @param show_files Whether to show verbose information.
+    @param computer Computer this file belongs to.
     """
     if name.endswith("processes.log"):
-        if options.files:
+        if show_files:
             print "Parsing", dirname+"/"+name
         parseprocesses(dirname, name, gettime(dirname, name), computer)
     elif name.endswith("sensors.log"):   
-        if options.files:
+        if show_files:
             print "Parsing", dirname+"/"+name
         parsetemp(dirname, name, gettime(dirname, name), computer)
 
@@ -57,6 +69,11 @@ def parsefile(dirname, name, options, computer):
 def parsetemp(dirname, name, time, computer):
     """
     Parse a temperature file.
+
+    @param dirname Directory to be processes.
+    @param name List of files in this directory.
+    @param time Time of this snapshot.
+    @param computer Computer this temperature reading belongs to.
     """
     with open(dirname+"/"+name) as f:
       lines = f.read().split("\n")
@@ -74,6 +91,11 @@ def parsetemp(dirname, name, time, computer):
 def parseprocesses(dirname, name, time, computer):
     """
     Parse a process file.
+
+    @param dirname Directory to be processes.
+    @param name List of files in this directory.
+    @param time Time of this snapshot.
+    @param computer Computer this process belongs to.
     """
     with open(dirname+"/"+name) as f:
         cpu = float(f.readline().split()[12][:-1])
