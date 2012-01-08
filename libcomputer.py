@@ -21,7 +21,7 @@ class Process(object):
 
     def add_pstate(self, pstate):
         self.pstates.append(pstate)
-        
+
     def __repr__(self):
         return "Process(%s, %s, %s)" % (repr(self.pid), repr(self.command), repr(self.pstates))
 
@@ -37,16 +37,16 @@ class Computer(object):
 
     def __repr__(self):
         return "Computer(%s, %s, %s)" % (repr(self.cstates), repr(self.tstates), repr(self.processes))
-        
+
     def mintemp(self):
         return min([x.cpu for x in self.tstates]), min([x.mb for x in self.tstates])
-        
+
     def maxtemp(self):
         return max([x.cpu for x in self.tstates]), max([x.mb for x in self.tstates])
-        
+
     def avgtemp(self):
         return avg([x.cpu for x in self.tstates]), avg([x.mb for x in self.tstates])
-        
+
     def cpustats(self):
         """
         Calculates the min, max and average for the computer's performance over all time.
@@ -69,7 +69,7 @@ class PState(object):
 
     def __repr__(self):
         return "PState(%s, %s, %s, %s)" % (repr(self.time), repr(self.cpu), repr(self.mem), repr(self.status))
-        
+
 
 class CState(object):
     """

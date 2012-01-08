@@ -27,7 +27,7 @@ def main():
     _check_python_version()
 
     (options, args) = _parse_args()
-    
+
     # If an output file is given, use that instead of standard output.
     if options.outfile == "-":
         outfile = sys.stdout
@@ -39,9 +39,9 @@ def main():
     # Iterate through all folders that are given on the command line.
     for infolder in args:
         os.path.walk(infolder, parsers.parsefolder, (options, computer))
-    
+
     _handle_reports(outfile, computer, options)
-        
+
     # If an outfile was used, close it.
     if options.outfile != "-":
         outfile.close()
@@ -58,12 +58,12 @@ def _generate_computer_instance(importfile, args):
     # Create a new computer if no import is given.
     if importfile is None:
         computer = libcomputer.Computer()
-    
+
         # If nothing is imported, there have to be some files to parse.
         if len(args) < 1:
             print "I need some input."
             sys.exit(1)
-    
+
     # Import the dump.
     else:
         with open(importfile) as f:
@@ -83,15 +83,15 @@ def _handle_reports(outfile, computer, options):
     # Maximum Report.
     if options.max:
         reports.maximum(computer)
-        
+
     # Computer Overview Report.
     if options.computer:
         reports.computer_overview(outfile, computer)
-            
+
     # Single Process Report.
     if options.process is not None:
         reports.process_report(outfile, computer.processes, options.process, options.format)
-            
+
     # Complete Dump.
     if options.dump:
         reports.dump(outfile, computer)
@@ -110,7 +110,7 @@ def _parse_args():
     parser.add_option("-v", dest="verbose", action="store_true", default=False, help="Show steps.")
 
     return parser.parse_args()
-        
+
 
 def _check_python_version():
     if sys.version_info >= (3, 0):
