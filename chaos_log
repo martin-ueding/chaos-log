@@ -23,19 +23,7 @@ import reports
 
 
 def main():
-    parser = optparse.OptionParser(usage="chaos_log folders...", description="Parses chaos log files and offeres summaries.")
-    parser.add_option("--max", dest="max", action="store_true", default=False, help="Show min-max status.")
-    parser.add_option("-v", dest="verbose", action="store_true", default=False, help="Show steps.")
-    parser.add_option("--files", dest="files", action="store_true", default=False, help="Show each processed file.")
-    parser.add_option("--computer", dest="computer", action="store_true", default=False, help="Report for whole computer.")
-    parser.add_option("--process", dest="process", default=None, help="Report for only this process")
-    parser.add_option("-o", dest="outfile", default="-", help="If given, write report into that file.")
-    parser.add_option("--format", dest="format", default="csv", help="Choose CSV or Plain [default: %default]")
-    parser.add_option("--dump", dest="dump", action="store_true", default=False, help="Dump whole data to outfile.")
-    parser.add_option("--import", dest="importfile", default=None, help="Import from given dump.")
-
-    (options, args) = parser.parse_args()
-    del parser
+    (options, args) = parse_args()
     
     # If an output file is given, use that instead of standard output.
     if options.outfile == "-":
@@ -81,6 +69,21 @@ def main():
     # If an outfile was used, close it.
     if options.outfile != "-":
         outfile.close()
+
+
+def parse_args():
+    parser = optparse.OptionParser(usage="chaos_log folders...", description="Parses chaos log files and offeres summaries.")
+    parser.add_option("--max", dest="max", action="store_true", default=False, help="Show min-max status.")
+    parser.add_option("-v", dest="verbose", action="store_true", default=False, help="Show steps.")
+    parser.add_option("--files", dest="files", action="store_true", default=False, help="Show each processed file.")
+    parser.add_option("--computer", dest="computer", action="store_true", default=False, help="Report for whole computer.")
+    parser.add_option("--process", dest="process", default=None, help="Report for only this process")
+    parser.add_option("-o", dest="outfile", default="-", help="If given, write report into that file.")
+    parser.add_option("--format", dest="format", default="csv", help="Choose CSV or Plain [default: %default]")
+    parser.add_option("--dump", dest="dump", action="store_true", default=False, help="Dump whole data to outfile.")
+    parser.add_option("--import", dest="importfile", default=None, help="Import from given dump.")
+
+    return parser.parse_args()
         
 
 if __name__ == "__main__":
