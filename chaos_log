@@ -51,7 +51,6 @@ def main():
     for infolder in args:
         os.path.walk(infolder, parsers.parsefolder, (options, computer))
     
-    # Write all the wanted reports.
     _handle_reports(outfile, computer, options)
         
     # If an outfile was used, close it.
@@ -60,6 +59,13 @@ def main():
 
 
 def _handle_reports(outfile, computer, options):
+    """
+    Write all the wanted reports.
+
+    @param outfile File to be written to.
+    @param computer Computer instance for input data.
+    @param options Program options.
+    """
     # Maximum Report.
     if options.max:
         reports.maximum(computer)
