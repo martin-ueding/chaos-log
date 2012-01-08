@@ -8,6 +8,7 @@ __doctype__ = "javadoc en"
 
 import csv
 import sys
+import time
 
 
 def dump(outfile, computer):
@@ -15,7 +16,7 @@ def dump(outfile, computer):
     outfile.write("\n")
 
 
-def process_report(outfile, processes, selected_process):
+def process_report(outfile, processes, selected_process, format):
     """
     """
     selected = None
@@ -28,17 +29,17 @@ def process_report(outfile, processes, selected_process):
         sys.exit(1)
         
     writer = csv.writer(outfile, quoting=csv.QUOTE_ALL)
-    mywrite(["Timestamp", "CPU %", "Memory %", "Status"], writer, outfile)
+    mywrite(["Timestamp", "CPU %", "Memory %", "Status"], writer, outfile, format)
     for state in selected.pstates:
         data = [time.mktime(state.time.timetuple()), state.cpu, state.mem, state.status]
         mywrite(data, writer, outfile)
         
 
-def mywrite(datalist, writer, outfile):
+def mywrite(datalist, writer, outfile, format="plain"):
     """
     Writes a list of data to the outfile either in CSV or plain text format.
     """
-    if options.format == "csv":
+    if format == "csv":
         writer.writerow(datalist)
     else:
         outfile.write(" ".join(map(str, datalist))+"\n")

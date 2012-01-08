@@ -17,8 +17,8 @@ import os
 import sys
 import time
 
-from computer import *
-from parser import *
+import libcomputer
+import parsers
 import reports
 
 
@@ -45,7 +45,7 @@ def main():
 
     # Create a new computer if no import is given.
     if options.importfile is None:
-        computer = Computer()
+        computer = libcomputer.Computer()
     
         # If nothing is imported, there have to be some files to parse.
         if len(args) < 1:
@@ -59,7 +59,7 @@ def main():
 
     # Iterate through all folders that are given on the command line.
     for infolder in args:
-        os.path.walk(infolder, parsefolder, (options, computer))
+        os.path.walk(infolder, parsers.parsefolder, (options, computer))
     
     # Maximum Report.
     if options.max:
@@ -86,7 +86,7 @@ def main():
             
     # Single Process Report.
     if options.process is not None:
-        reports.process_report(outfile, computer.processes, options.process)
+        reports.process_report(outfile, computer.processes, options.process, options.format)
             
     # Complete Dump.
     if options.dump:
