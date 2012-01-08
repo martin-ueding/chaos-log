@@ -33,19 +33,7 @@ def main():
     else:
         outfile = open(options.outfile, "w")
 
-    # Create a new computer if no import is given.
-    if options.importfile is None:
-        computer = libcomputer.Computer()
-    
-        # If nothing is imported, there have to be some files to parse.
-        if len(args) < 1:
-            print "I need some input."
-            sys.exit(1)
-    
-    # Import the dump.
-    else:
-        with open(options.importfile) as f:
-            computer = eval(f.read())
+    computer = _generate_computer_instance(options.importfile, args)
 
     # Iterate through all folders that are given on the command line.
     for infolder in args:
@@ -56,6 +44,31 @@ def main():
     # If an outfile was used, close it.
     if options.outfile != "-":
         outfile.close()
+
+
+def _generate_computer_instance(importfile, args):
+    """
+    Generate a computer instance. Either from given import file or from scratch.
+
+    @param importfile Importfile to use.
+    @param args CLI arguments to check whether files are given if no import file.
+    @return Empty or imported computer instance.
+    """
+    # Create a new computer if no import is given.
+    if importfile is None:
+        computer = libcomputer.Computer()
+    
+        # If nothing is imported, there have to be some files to parse.
+        if len(args) < 1:
+            print "I need some input."
+            sys.exit(1)
+    
+    # Import the dump.
+    else:
+        with open(importfile) as f:
+            computer = eval(f.read())
+
+    return computer
 
 
 def _handle_reports(outfile, computer, options):
