@@ -2,15 +2,23 @@
 
 pythonfiles:=$(wildcard *.py)
 
+###############################################################################
+#                               Public Targets                                #
+###############################################################################
+
 epydoc: html/index.html
 
 test:
 	bash testrun.sh
 
-html/index.html: chaos_log $(pythonfiles)
-	epydoc -v $^
-
 clean:
 	$(RM) *.pyc
 	$(RM) -r html
 	$(RM) chaos_logc
+
+###############################################################################
+#                               Private Targets                               #
+###############################################################################
+
+html/index.html: chaos_log $(pythonfiles)
+	epydoc -v $^
