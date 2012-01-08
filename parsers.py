@@ -3,6 +3,10 @@
 
 # Copyright (c) 2012 Martin Ueding <dev@martin-ueding.de>
 
+"""
+Contains the parser logic for `top` and `sensors` snapshots.
+"""
+
 __docformat__ = "javadoc en"
 
 
@@ -18,7 +22,7 @@ def parsefolder(arg, dirname, names):
 
     @param arg Tuble containing program options and the computer.
     @param dirname Directory to be processes.
-    @param name List of files in this directory.
+    @param names List of files in this directory.
     """
     options, computer = arg
 

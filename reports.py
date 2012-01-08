@@ -3,6 +3,10 @@
 
 # Copyright (c) 2012 Martin Ueding <dev@martin-ueding.de>
 
+"""
+Reports for the gathered data.
+"""
+
 __docformat__ = "javadoc en"
 
 
