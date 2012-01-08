@@ -19,6 +19,7 @@ import time
 
 from computer import *
 from parser import *
+import reports
 
 
 def main():
@@ -91,39 +92,15 @@ def main():
             
     # Single Process Report.
     if options.process is not None:
-        selected = None
-        for process in computer.processes:
-            if process[1] == options.process:
-                selected = computer.processes[process]
-                
-        if selected is None:
-            print "There is no process %s." % options.process
-            sys.exit(1)
-            
-        writer = csv.writer(outfile, quoting=csv.QUOTE_ALL)
-        mywrite(["Timestamp", "CPU %", "Memory %", "Status"], writer, outfile)
-        for state in selected.pstates:
-            data = [time.mktime(state.time.timetuple()), state.cpu, state.mem, state.status]
-            mywrite(data, writer, outfile)
+        report.process_report(outfile, computer.processes, options.process)
             
     # Complete Dump.
     if options.dump:
-        outfile.write(repr(computer))
-        outfile.write("\n")
+        reports.dump(outfile, computer)
         
     # If an outfile was used, close it.
     if options.outfile != "-":
         outfile.close()
-        
-
-def mywrite(datalist, writer, outfile):
-    """
-    Writes a list of data to the outfile either in CSV or plain text format.
-    """
-    if options.format == "csv":
-        writer.writerow(datalist)
-    else:
-        outfile.write(" ".join(map(str, datalist))+"\n")
         
 
 if __name__ == "__main__":
