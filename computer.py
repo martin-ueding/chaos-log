@@ -96,3 +96,13 @@ class TState(object):
 
     def __repr__(self):
         return "TState(%s, %s, %s)" % (repr(self.time), repr(self.cpu), repr(self.mb))
+
+
+def avg(l):
+    """
+    Return the average of list items.
+
+    @param l List with summable items.
+    @return Average of the list.
+    """
+    return sum(l) / len(l)

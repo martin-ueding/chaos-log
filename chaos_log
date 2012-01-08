@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 # Copyright (c) 2012 Martin Ueding <dev@martin-ueding.de>
@@ -18,15 +18,6 @@ import sys
 import time
 
 from computer import *
-
-def avg(l):
-    """
-    Return the average of list items.
-
-    @param l List with summable items.
-    @return Average of the list.
-    """
-    return sum(l) / len(l)
 
 
 def main():
