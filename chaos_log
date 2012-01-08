@@ -3,6 +3,12 @@
 
 # Copyright (c) 2012 Martin Ueding <dev@martin-ueding.de>
 
+"""
+Script to parse snapshots of `top` and `sensors` from a server.
+"""
+
+__docformat__ = "javadoc en"
+
 import csv
 import datetime
 import itertools
@@ -12,12 +18,16 @@ import sys
 import time
 
 def avg(l):
-    """Return the average of list items."""
+    """
+    Return the average of list items.
+    """
     return sum(l) / len(l)
 
 
 class Process(object):
-    """Models a running process with several states."""
+    """
+    Models a running process with several states.
+    """
     def __init__(self, pid, command, pstates=[]):
         self.pid = pid
         self.command = command
@@ -31,7 +41,9 @@ class Process(object):
 
 
 class Computer(object):
-    """A computer which has several processes and temperature and overal usage states."""
+    """
+    A computer which has several processes and temperature and overal usage states.
+    """
     def __init__(self, cstates=[], tstates=[], processes={}):
         self.cstates = cstates
         self.tstates = tstates
@@ -50,7 +62,9 @@ class Computer(object):
         return avg([x.cpu for x in self.tstates]), avg([x.mb for x in self.tstates])
         
     def cpustats(self):
-        """Calculates the min, max and average for the computer's performance over all time."""
+        """
+        Calculates the min, max and average for the computer's performance over all time.
+        """
         return {"cpu":  {"min": min([x.cpu for x in self.cstates]), "max": max([x.cpu for x in self.cstates]), "avg": avg([x.cpu for x in self.cstates])},
                 "mem":  {"min": min([x.mem for x in self.cstates]), "max": max([x.mem for x in self.cstates]), "avg": avg([x.mem for x in self.cstates])},
                 "swap": {"min": min([x.swap for x in self.cstates]), "max": max([x.swap for x in self.cstates]), "avg": avg([x.swap for x in self.cstates])}
@@ -58,7 +72,9 @@ class Computer(object):
 
 
 class PState(object):
-    """Process state."""
+    """
+    Process state.
+    """
     def __init__(self, time, cpu, mem, status):
         self.time = time
         self.cpu = cpu
@@ -70,7 +86,9 @@ class PState(object):
         
 
 class CState(object):
-    """Computer state."""
+    """
+    Computer state.
+    """
     def __init__(self, time, cpu, mem, swap):
         self.time = time
         self.cpu = cpu
@@ -82,7 +100,9 @@ class CState(object):
 
 
 class TState(object):
-    """Temperature state."""
+    """
+    Temperature state.
+    """
     def __init__(self, time, cpu, mb):
         self.time = time
         self.cpu = cpu
@@ -187,7 +207,9 @@ def main():
         
 
 def mywrite(datalist, writer, outfile):
-    """Writes a list of data to the outfile either in CSV or plain text format."""
+    """
+    Writes a list of data to the outfile either in CSV or plain text format.
+    """
     if options.format == "csv":
         writer.writerow(datalist)
     else:
@@ -195,7 +217,9 @@ def mywrite(datalist, writer, outfile):
         
 
 def parsefolder(arg, dirname, names):
-    """Parses a folder. All files are passed to the parsefile function."""
+    """
+    Parses a folder. All files are passed to the parsefile function.
+    """
     names.sort()
     if options.verbose:
         print "Parsing", dirname
@@ -207,7 +231,9 @@ def parsefolder(arg, dirname, names):
         
 
 def gettime(dirname, name):
-    """Parses a time from the folder name."""
+    """
+    Parses a time from the folder name.
+    """
     timefolder = os.path.basename(dirname)
     datefolder = os.path.basename(os.path.dirname(dirname))
     
@@ -217,7 +243,9 @@ def gettime(dirname, name):
 
 
 def parsefile(dirname, name):
-    """Determines which type of file is given and calls the apropriate parse method."""
+    """
+    Determines which type of file is given and calls the apropriate parse method.
+    """
     if name.endswith("processes.log"):
         if options.files:
             print "Parsing", dirname+"/"+name
@@ -229,7 +257,9 @@ def parsefile(dirname, name):
 
 
 def parseprocesses(dirname, name, time):
-    """Parse a process file."""
+    """
+    Parse a process file.
+    """
     with open(dirname+"/"+name) as f:
         cpu = float(f.readline().split()[12][:-1])
         f.readline()
@@ -267,7 +297,9 @@ def parseprocesses(dirname, name, time):
 
 
 def parsetemp(dirname, name, time):
-    """Parse a temperature file."""
+    """
+    Parse a temperature file.
+    """
     with open(dirname+"/"+name) as f:
       lines = f.read().split("\n")
       
