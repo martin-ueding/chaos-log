@@ -34,9 +34,6 @@ def main():
     parser.add_option("--dump", dest="dump", action="store_true", default=False, help="Dump whole data to outfile.")
     parser.add_option("--import", dest="importfile", default=None, help="Import from given dump.")
 
-    # XXX This sucks as well.
-    global options
-
     (options, args) = parser.parse_args()
     del parser
     
@@ -46,9 +43,6 @@ def main():
     else:
         outfile = open(options.outfile, "w")
 
-    # XXX This is not good!
-    global computer
-    
     # Create a new computer if no import is given.
     if options.importfile is None:
         computer = Computer()
@@ -65,7 +59,7 @@ def main():
 
     # Iterate through all folders that are given on the command line.
     for infolder in args:
-        os.path.walk(infolder, parsefolder, None)
+        os.path.walk(infolder, parsefolder, (options, computer))
     
     # Maximum Report.
     if options.max:

@@ -6,10 +6,18 @@
 __doctype__ = "javadoc en"
 
 
+import datetime
+import os
+
+import libcomputer
+
+
 def parsefolder(arg, dirname, names):
     """
     Parses a folder. All files are passed to the parsefile function.
     """
+    options, computer = arg
+
     names.sort()
     if options.verbose:
         print "Parsing", dirname
@@ -17,7 +25,7 @@ def parsefolder(arg, dirname, names):
         if not os.path.isfile(dirname+"/"+name):
             continue
 
-        parsefile(dirname, name)
+        parsefile(dirname, name, options, computer)
         
 
 def gettime(dirname, name):
@@ -32,7 +40,7 @@ def gettime(dirname, name):
     return time
 
 
-def parsefile(dirname, name):
+def parsefile(dirname, name, options, computer):
     """
     Determines which type of file is given and calls the apropriate parse method.
 
@@ -42,14 +50,14 @@ def parsefile(dirname, name):
     if name.endswith("processes.log"):
         if options.files:
             print "Parsing", dirname+"/"+name
-        parseprocesses(dirname, name, gettime(dirname, name))
+        parseprocesses(dirname, name, gettime(dirname, name), computer)
     elif name.endswith("sensors.log"):   
         if options.files:
             print "Parsing", dirname+"/"+name
-        parsetemp(dirname, name, gettime(dirname, name))
+        parsetemp(dirname, name, gettime(dirname, name), computer)
 
 
-def parsetemp(dirname, name, time):
+def parsetemp(dirname, name, time, computer):
     """
     Parse a temperature file.
 
@@ -65,11 +73,11 @@ def parsetemp(dirname, name, time):
       cpu = float(lines[9].split()[2])
       mb = float(lines[10].split()[2])
       
-      state = TState(time, cpu, mb)
+      state = libcomputer.TState(time, cpu, mb)
       computer.tstates.append(state)
 
 
-def parseprocesses(dirname, name, time):
+def parseprocesses(dirname, name, time, computer):
     """
     Parse a process file.
 
@@ -86,7 +94,7 @@ def parseprocesses(dirname, name, time):
         f.readline()
         f.readline()
         
-        cstate = CState(time, cpu, mem, swap)
+        cstate = libcomputer.CState(time, cpu, mem, swap)
         
         computer.cstates.append(cstate)
 
@@ -99,14 +107,14 @@ def parseprocesses(dirname, name, time):
             pid = int(data[0])
             command = data[11]
 
-            state = PState(time, float(data[8]), float(data[9]), data[7])
+            state = libcomputer.PState(time, float(data[8]), float(data[9]), data[7])
 
             key = (pid, command)
             
             if key in computer.processes:
                 current = computer.processes[key]
             else:
-                current = Process(pid, command, [])
+                current = libcomputer.Process(pid, command, [])
                 computer.processes[(pid, command)] = current
 
             current.pstates.append(state)
