@@ -23,7 +23,7 @@ import reports
 
 
 def main():
-    (options, args) = parse_args()
+    (options, args) = _parse_args()
     
     # If an output file is given, use that instead of standard output.
     if options.outfile == "-":
@@ -71,7 +71,7 @@ def main():
         outfile.close()
 
 
-def parse_args():
+def _parse_args():
     parser = optparse.OptionParser(usage="chaos_log folders...", description="Parses chaos log files and offeres summaries.")
     parser.add_option("--max", dest="max", action="store_true", default=False, help="Show min-max status.")
     parser.add_option("-v", dest="verbose", action="store_true", default=False, help="Show steps.")
