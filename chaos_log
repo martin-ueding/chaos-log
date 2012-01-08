@@ -29,6 +29,7 @@ class Process(object):
     def __repr__(self):
         return "Process(%s, %s, %s)" % (repr(self.pid), repr(self.command), repr(self.pstates))
 
+
 class Computer(object):
     """A computer which has several processes and temperature and overal usage states."""
     def __init__(self, cstates=[], tstates=[], processes={}):
@@ -55,6 +56,7 @@ class Computer(object):
                 "swap": {"min": min([x.swap for x in self.cstates]), "max": max([x.swap for x in self.cstates]), "avg": avg([x.swap for x in self.cstates])}
           }
 
+
 class PState(object):
     """Process state."""
     def __init__(self, time, cpu, mem, status):
@@ -66,6 +68,7 @@ class PState(object):
     def __repr__(self):
         return "PState(%s, %s, %s, %s)" % (repr(self.time), repr(self.cpu), repr(self.mem), repr(self.status))
         
+
 class CState(object):
     """Computer state."""
     def __init__(self, time, cpu, mem, swap):
@@ -76,6 +79,7 @@ class CState(object):
 
     def __repr__(self):
         return "CState(%s, %s, %s, %s)" % (repr(self.time), repr(self.cpu), repr(self.mem), repr(self.swap))
+
 
 class TState(object):
     """Temperature state."""
@@ -181,6 +185,7 @@ def main():
     if options.outfile != "-":
         outfile.close()
         
+
 def mywrite(datalist, writer, outfile):
     """Writes a list of data to the outfile either in CSV or plain text format."""
     if options.format == "csv":
@@ -200,6 +205,7 @@ def parsefolder(arg, dirname, names):
 
         parsefile(dirname, name)
         
+
 def gettime(dirname, name):
     """Parses a time from the folder name."""
     timefolder = os.path.basename(dirname)
@@ -208,6 +214,7 @@ def gettime(dirname, name):
     time = datetime.datetime(int(datefolder[0:4]), int(datefolder[5:7]), int(datefolder[8:10]), int(timefolder[:2]), int(name[:2]))
      
     return time
+
 
 def parsefile(dirname, name):
     """Determines which type of file is given and calls the apropriate parse method."""
@@ -219,6 +226,7 @@ def parsefile(dirname, name):
         if options.files:
             print "Parsing", dirname+"/"+name
         parsetemp(dirname, name, gettime(dirname, name))
+
 
 def parseprocesses(dirname, name, time):
     """Parse a process file."""
@@ -257,6 +265,7 @@ def parseprocesses(dirname, name, time):
 
             current.pstates.append(state)
 
+
 def parsetemp(dirname, name, time):
     """Parse a temperature file."""
     with open(dirname+"/"+name) as f:
@@ -270,7 +279,6 @@ def parsetemp(dirname, name, time):
       
       state = TState(time, cpu, mb)
       computer.tstates.append(state)
-
 
 
 if __name__ == "__main__":
