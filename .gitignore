@@ -1,6 +1,6 @@
 *.pyc
-chaos_logc
 *.tgz
 *~
+chaos_logc
 data
 html
