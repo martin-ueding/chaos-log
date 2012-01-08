@@ -23,6 +23,8 @@ import reports
 
 
 def main():
+    _check_python_version()
+
     (options, args) = _parse_args()
     
     # If an output file is given, use that instead of standard output.
@@ -85,6 +87,13 @@ def _parse_args():
 
     return parser.parse_args()
         
+
+def _check_python_version():
+    if sys.version_info >= (3, 0):
+        print "You are using python 3, which is not intended for this script."
+        print "If something fails, you might want to try:"
+        print "python2 chaos_log [options for chaos_log]"
+
 
 if __name__ == "__main__":
     main()
