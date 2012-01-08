@@ -86,7 +86,7 @@ def main():
             
     # Single Process Report.
     if options.process is not None:
-        report.process_report(outfile, computer.processes, options.process)
+        reports.process_report(outfile, computer.processes, options.process)
             
     # Complete Dump.
     if options.dump:
