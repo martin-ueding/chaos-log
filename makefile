@@ -9,6 +9,9 @@ pythonfiles:=$(wildcard *.py)
 # Generates documentation from the Python source code.
 epydoc: html/index.html
 
+check-doc: chaos_log $(pythonfiles)
+	epydoc -v --check $^
+
 # Runs a test.
 test:
 	bash testrun.sh
