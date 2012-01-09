@@ -20,6 +20,11 @@ class Process(object):
         self.pstates = pstates
 
     def add_pstate(self, pstate):
+        """
+        Appends a process state to this process.
+
+        @param pstate PState onject to add.
+        """
         self.pstates.append(pstate)
 
     def __repr__(self):
@@ -39,17 +44,34 @@ class Computer(object):
         return "Computer(%s, %s, %s)" % (repr(self.cstates), repr(self.tstates), repr(self.processes))
 
     def mintemp(self):
+        """
+        Minimal temperature of CPU and mainboard.
+
+        @return Tuple with min CPU an MB temperatures.
+        """
         return min([x.cpu for x in self.tstates]), min([x.mb for x in self.tstates])
 
     def maxtemp(self):
+        """
+        Maximal temperature of CPU and mainboard.
+
+        @return Tuple with max CPU an MB temperatures.
+        """
         return max([x.cpu for x in self.tstates]), max([x.mb for x in self.tstates])
 
     def avgtemp(self):
+        """
+        Average temperature of CPU and mainboard.
+
+        @return Tuple with average CPU an MB temperatures.
+        """
         return avg([x.cpu for x in self.tstates]), avg([x.mb for x in self.tstates])
 
     def cpustats(self):
         """
         Calculates the min, max and average for the computer's performance over all time.
+
+        @return Dict with cpu, mem and swap, each containing a dict with min, max and avg.
         """
         return {"cpu":  {"min": min([x.cpu for x in self.cstates]), "max": max([x.cpu for x in self.cstates]), "avg": avg([x.cpu for x in self.cstates])},
                 "mem":  {"min": min([x.mem for x in self.cstates]), "max": max([x.mem for x in self.cstates]), "avg": avg([x.mem for x in self.cstates])},
@@ -62,6 +84,14 @@ class PState(object):
     Process state.
     """
     def __init__(self, time, cpu, mem, status):
+        """
+        New PState object.
+
+        @param time Datetime.
+        @param cpu CPU usage.
+        @param mem Memory usage.
+        @param status Process status.
+        """
         self.time = time
         self.cpu = cpu
         self.mem = mem
@@ -76,6 +106,14 @@ class CState(object):
     Computer state.
     """
     def __init__(self, time, cpu, mem, swap):
+        """
+        New CState object.
+
+        @param time Datetime.
+        @param cpu Load average.
+        @param mem Memory usage.
+        @param swap Swap usage.
+        """
         self.time = time
         self.cpu = cpu
         self.mem = mem
@@ -90,6 +128,13 @@ class TState(object):
     Temperature state.
     """
     def __init__(self, time, cpu, mb):
+        """
+        New CState object.
+
+        @param time Datetime.
+        @param cpu CPU temperature.
+        @param mb Mainboard temperature.
+        """
         self.time = time
         self.cpu = cpu
         self.mb = mb
