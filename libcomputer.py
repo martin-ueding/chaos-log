@@ -20,7 +20,7 @@ class Process(object):
         """
         Appends a process state to this process.
 
-        @param pstate: PState onject to add.
+        @param pstate: PState object to add.
         """
         self.pstates.append(pstate)
 
