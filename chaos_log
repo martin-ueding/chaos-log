@@ -7,9 +7,6 @@
 Script to parse snapshots of `top` and `sensors` from a server.
 """
 
-__docformat__ = "javadoc en"
-
-
 import csv
 import datetime
 import itertools
@@ -21,7 +18,6 @@ import time
 import libcomputer
 import parsers
 import reports
-
 
 def main():
     _check_python_version()
@@ -51,9 +47,9 @@ def _generate_computer_instance(importfile, args):
     """
     Generate a computer instance. Either from given import file or from scratch.
 
-    @param importfile Importfile to use.
-    @param args CLI arguments to check whether files are given if no import file.
-    @return Empty or imported computer instance.
+    @param importfile: Importfile to use.
+    @param args: CLI arguments to check whether files are given if no import file.
+    @return: Empty or imported computer instance.
     """
     # Create a new computer if no import is given.
     if importfile is None:
@@ -76,9 +72,9 @@ def _handle_reports(outfile, computer, options):
     """
     Write all the wanted reports.
 
-    @param outfile File to be written to.
-    @param computer Computer instance for input data.
-    @param options Program options.
+    @param outfile: File to be written to.
+    @param computer: Computer instance for input data.
+    @param options: Program options.
     """
     # Maximum Report.
     if options.max:
