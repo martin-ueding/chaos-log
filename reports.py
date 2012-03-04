@@ -11,16 +11,18 @@ import csv
 import sys
 import time
 
+__docformat__ = "restructuredtext en"
+
 def dump(outfile, computer):
     """
-    Dumps the `computer` object.
+    Dumps the ``computer`` object.
 
-    This can be reimported with `eval()` since it is a valid Python expression.
+    This can be reimported with ``eval()`` since it is a valid Python expression.
     Testing suggested that it might be faster to just reread the logfiles
     themselves.
 
-    @param outfile: Filedescriptor to be written to.
-    @param computer: Computer object containing all the data.
+    :param outfile: Filedescriptor to be written to.
+    :param computer: Computer object containing all the data.
     """
     outfile.write(repr(computer))
     outfile.write("\n")
@@ -30,10 +32,10 @@ def process_report(outfile, processes, selected_process, format):
     """
     Writes all data concerning one specific process.
 
-    @param outfile: Filedescriptor to be written to.
-    @param processes: Dict of all the processes.
-    @param selected_process: Process name that should be reported.
-    @param format: Format for mywrite().
+    :param outfile: Filedescriptor to be written to.
+    :param processes: Dict of all the processes.
+    :param selected_process: Process name that should be reported.
+    :param format: Format for mywrite().
     """
     selected = None
     for process in processes:
@@ -58,7 +60,7 @@ def maximum (computer):
     This report is always written to STDOUT since it would be backwards to
     parse this. Write a new report instead.
 
-    @param computer: Computer object containing all the data.
+    :param computer: Computer object containing all the data.
     """
     cpustats = computer.cpustats()
 
@@ -80,8 +82,8 @@ def computer_overview(outfile, computer):
 
     This includes time and load average, memory, temperature.
 
-    @param outfile: Filedescriptor to be written to.
-    @param computer: Computer object containing all the data.
+    :param outfile: Filedescriptor to be written to.
+    :param computer: Computer object containing all the data.
     """
     writer = csv.writer(outfile, quoting=csv.QUOTE_ALL)
     writer.writerow(["Timestamp", "Load Average", "Memory MB", "Swap MB", "Temp CPU °C", "Temp Mainboard °C"])
@@ -94,10 +96,10 @@ def mywrite(datalist, writer, outfile, format="plain"):
     """
     Writes a list of data to the outfile either in CSV or plain text format.
 
-    @param datalist: List with data columns.
-    @param writer: CSV writer object.
-    @param outfile: Filedescriptor to be written to.
-    @param format: "plain" or "csv" format to be written.
+    :param datalist: List with data columns.
+    :param writer: CSV writer object.
+    :param outfile: Filedescriptor to be written to.
+    :param format: "plain" or "csv" format to be written.
     """
     if format == "csv":
         writer.writerow(datalist)
